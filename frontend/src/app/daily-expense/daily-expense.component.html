@@ -1,0 +1,84 @@
+<div class="container">
+    <div class="baner">
+        <h2>Daily Expenses</h2>
+    </div>
+
+    <hr>
+
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Category</th>
+            <th scope="col">Description</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Date</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="dailyExpenses.length">
+          <tr *ngFor="let expense of dailyExpenses">
+            <td>{{expense.category}}</td>
+            <td>{{expense.description}}</td>
+            <td>{{expense.amount}}</td>
+            <td>{{expense.date | date}}</td>
+            <td>
+              <i (click)="edit(expense.id)" data-bs-toggle="modal" data-bs-target="#createExpenseModal" class="fa-solid fa-pen text-primary" aria-hidden="true"></i>
+              <i (click)="delete(expense.id)" class="fa fa-trash text-danger" aria-hidden="true"></i>
+            </td>
+          </tr>
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-start">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createExpenseModal">Add Expense</button>
+    </div>
+    <div class="modal fade" id="createExpenseModal" tabindex="-1" aria-labelledby="createExpenseModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="createExpenseModalLabel">Create expense</h1>
+            <button id="button-close" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div [formGroup]="dailyExpenseForm">
+              <div>
+                <div class="mb-3 has-validation">
+                  <label class="form-label">Category</label>
+                  <input type="text" class="form-control" formControlName="category" required>
+                  <div *ngIf="dailyExpenseForm.get('category')?.invalid && dailyExpenseForm.get('category')?.touched" class="invalid-feedback">
+                    Category is required
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Description</label>
+                  <input type="text" class="form-control" formControlName="description" required>
+                  <div *ngIf="dailyExpenseForm.get('description')?.invalid && dailyExpenseForm.get('description')?.touched" class="invalid-feedback">
+                    Description is required
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Amount</label>
+                  <input type="number" class="form-control" formControlName="amount" required>
+                  <div *ngIf="dailyExpenseForm.get('amount')?.invalid && dailyExpenseForm.get('amount')?.touched" class="invalid-feedback">
+                    Amount is required
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Date</label>
+                  <input type="date" class="form-control" formControlName="date" required>
+                  <div *ngIf="dailyExpenseForm.get('date')?.invalid && dailyExpenseForm.get('date')?.touched" class="invalid-feedback">
+                    Date is required
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button *ngIf="!editMode" type="button" class="btn btn-primary" (click)="save(this.dailyExpenseForm.value)">Save changes</button>
+            <button *ngIf="editMode" type="button" class="btn btn-primary" (click)="update(this.dailyExpense.id, dailyExpenseForm.value)">Update</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
